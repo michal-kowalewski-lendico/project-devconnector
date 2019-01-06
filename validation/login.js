@@ -4,6 +4,8 @@ const isEmpty = require("./is-empty");
 module.exports = function validateLoginInput(data) {
   let errors = {};
 
+  // isEmpty from Validator can check only strings
+  // so we need our method to check it and eventually change into an empty string
   data.email = !isEmpty(data.email) ? data.email : "";
   data.password = !isEmpty(data.password) ? data.password : "";
 
