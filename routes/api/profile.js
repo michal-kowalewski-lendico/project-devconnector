@@ -3,6 +3,9 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
 
+// Load validation
+const validateProfileInput = require("../../validation/profile");
+
 // Load Profile model
 const Profile = require("../../models/Profile");
 // Load User model
@@ -23,6 +26,8 @@ router.get(
     const errors = {};
 
     Profile.findOne({ user: req.user.id })
+      // because we have a connection set up in schema
+      .populate("user", ["name", "avatar"])
       .then(profile => {
         if (!profile) {
           errors.noprofile = "There is no profile for this user";
@@ -41,6 +46,14 @@ router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    const { errors, isValid } = validateProfileInput(req.body);
+
+    // Check validation
+    if (!isValid) {
+      // Return any errors with 400 status
+      return res.status(400).json(errors);
+    }
+
     // Get fields
     const profileFields = {};
     profileFields.user = req.user.id;
@@ -55,7 +68,7 @@ router.post(
 
     // Skills need to split into array
     if (typeof req.body.skills !== "undefined") {
-      profileFields.skills - req.body.skills.split(",");
+      profileFields.skills = req.body.skills.split(",");
     }
 
     // Social
