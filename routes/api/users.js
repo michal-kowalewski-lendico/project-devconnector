@@ -33,6 +33,7 @@ router.post("/register", (req, res) => {
     if (user) {
       errors.email = "Email already exists";
       return res.status(400).json(errors);
+      t;
     } else {
       const avatar = gravatar.url(req.body.email, {
         s: "200", // Size
@@ -72,8 +73,9 @@ router.post("/login", (req, res) => {
     return res.status(400).json(errors);
   }
 
-  const email = req.body.email;
-  const password = req.body.password;
+  const { email, password } = req.body;
+  // const email = req.body.email;
+  // const password = req.body.password;
 
   //Find user by email
   User.findOne({ email }).then(user => {
