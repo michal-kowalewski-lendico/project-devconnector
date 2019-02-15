@@ -70,6 +70,7 @@ router.delete(
   "/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    // hey men this is totaly not needed !!!!
     Profile.findOne({ user: req.user.id }).then(profile => {
       Post.findById(req.params.id).then(post => {
         //Check post owner
@@ -96,6 +97,7 @@ router.post(
   "/like/:id",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
+    // hey men this is totaly not needed !!!!
     Profile.findOne({ user: req.user.id }).then(profile => {
       Post.findById(req.params.id)
         .then(post => {
